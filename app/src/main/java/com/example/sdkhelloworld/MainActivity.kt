@@ -10,8 +10,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
 import com.evergage.android.Campaign
 import com.evergage.android.CampaignHandler
 import com.evergage.android.ClientConfiguration
@@ -22,6 +27,8 @@ import com.evergage.android.LogLevel
 import com.evergage.android.Screen
 import com.evergage.android.promote.Product
 import com.example.sdkhelloworld.ui.theme.SdkHelloworldTheme
+import coil.load
+
 public interface Campaign
 
 
@@ -68,8 +75,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             SdkHelloworldTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     Greeting("Android")
                 }
             }
@@ -85,21 +94,24 @@ class MainActivity : ComponentActivity() {
         var activeCampaign: Campaign? = null
         //  val handler: CampaignHandler? = null
 
+        //ViewState should be constructed from Campaign Data
 
 
         screen2?.let {
-             val handler = object : CampaignHandler {
+            val handler = object : CampaignHandler {
                 override fun handleCampaign(campaign: Campaign) {
                     val bannerType = campaign.data.optString("bannerType")
+                    val model = campaign.data.optString("imageUrl")
+                    val contentDesription = campaign.data.optString("body")
 
-                     Log.d("TAG", "Campanha" + campaign.data)
+                    Log.d("TAG", "Campanha" + campaign.data)
                     if (bannerType.isEmpty()) {
-                       // Log.d(TAG, "No bannerType")
+                        // Log.d(TAG, "No bannerType")
                         return
                     }
 
                     if (activeCampaign != null && activeCampaign == campaign) {
-                       // Log.d(TAG, "Ignoring campaign name " + campaign.campaignName + " since equivalent content is already active")
+                        // Log.d(TAG, "Ignoring campaign name " + campaign.campaignName + " since equivalent content is already active")
                         return
                     }
 
@@ -117,30 +129,34 @@ class MainActivity : ComponentActivity() {
 
                     }
 
+
                 }
             }
 
             screen2.setCampaignHandler(handler, campaignTarget)
             screen2.trackAction("Home")
 
-            //Tracking action
+
+
         }
 
     }
 
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
             text = "Hello $name!",
             modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SdkHelloworldTheme {
-        Greeting("Android")
+        )
     }
-}}
+
+    @Preview(showBackground = true)
+    @Composable
+    fun GreetingPreview() {
+        SdkHelloworldTheme {
+            Greeting("Android")
+        }
+    }
+
+}
