@@ -67,4 +67,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("com.evergage.android:evergage-android-sdk:1.4.0@aar")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }
